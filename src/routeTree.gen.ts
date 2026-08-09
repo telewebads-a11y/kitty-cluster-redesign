@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -18,6 +19,11 @@ import { Route as TournamentRouteImport } from './routes/tournament'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayRoute = PlayRouteImport.update({
@@ -43,6 +49,7 @@ const TournamentRoute = TournamentRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/play': typeof PlayRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/play': typeof PlayRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/play': typeof PlayRoute
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
@@ -65,14 +74,24 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/play' | '/profile' | '/settings' | '/tournament'
+  fullPaths:
+    '/' | '/notifications' | '/play' | '/profile' | '/settings' | '/tournament'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/play' | '/profile' | '/settings' | '/tournament'
-  id: '__root__' | '/' | '/play' | '/profile' | '/settings' | '/tournament'
+  to:
+    '/' | '/notifications' | '/play' | '/profile' | '/settings' | '/tournament'
+  id:
+    | '__root__'
+    | '/'
+    | '/notifications'
+    | '/play'
+    | '/profile'
+    | '/settings'
+    | '/tournament'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NotificationsRoute: typeof NotificationsRoute
   PlayRoute: typeof PlayRoute
   ProfileRoute: typeof ProfileRoute
   SettingsRoute: typeof SettingsRoute
@@ -86,6 +105,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play': {
@@ -121,6 +147,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NotificationsRoute: NotificationsRoute,
   PlayRoute: PlayRoute,
   ProfileRoute: ProfileRoute,
   SettingsRoute: SettingsRoute,
