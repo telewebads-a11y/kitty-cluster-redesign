@@ -218,22 +218,6 @@ function PlayScreen() {
             );
           })}
         </div>
-        <div className="hidden">
-          {board.map((row, r) =>
-            row.map((cell, c) => {
-              const key = `${r}-${c}`;
-              const preview = previewCells.has(key);
-              return (
-                <span
-                  key={key}
-                  className={cn(preview && "hidden")}
-                >
-                  {cell}
-                </span>
-              );
-            }),
-          )}
-        </div>
         {toast && (
           <div className="pointer-events-none absolute inset-0 grid place-items-center">
             <span className="animate-pop-in grad-play rounded-2xl px-4 py-2 font-display text-xl font-extrabold text-primary-foreground shadow-pop">
