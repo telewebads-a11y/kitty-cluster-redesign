@@ -174,41 +174,62 @@ function PlayScreen() {
         </div>
       </div>
 
-      <div className="relative rounded-3xl bg-board p-2 shadow-pop">
-        <div className="grid grid-cols-9 gap-[3px]">
+      <div className="relative rounded-3xl bg-board p-2.5 shadow-pop">
+        <div className="grid grid-cols-3 gap-1.5">
+          {Array.from({ length: 9 }).map((_, box) => {
+            const br = Math.floor(box / 3);
+            const bc = box % 3;
+            return (
+              <div key={box} className="grid grid-cols-3 gap-[3px] rounded-xl bg-foreground/5 p-[3px]">
+                {Array.from({ length: 9 }).map((__, i) => {
+                  const r = br * 3 + Math.floor(i / 3);
+                  const c = bc * 3 + (i % 3);
+                  const cell = board[r]![c]!;
+                  const key = `${r}-${c}`;
+                  const preview = previewCells.has(key);
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onPointerEnter={() => setHover({ r, c })}
+                      onPointerDown={() => setHover({ r, c })}
+                      onClick={() => place(r, c)}
+                      className={cn(
+                        "relative aspect-square rounded-[6px] bg-board-cell transition-all duration-150",
+                        preview && "ring-2 ring-primary",
+                      )}
+                    >
+                      {cell && (
+                        <span
+                          className={cn(
+                            "absolute inset-0 grid place-items-center rounded-[6px] text-[11px] shadow-inset-soft",
+                            critterClass[cell],
+                            clearing.includes(key) ? "animate-clear-cell" : "animate-pop-in",
+                          )}
+                        >
+                          {critterEmoji[cell]}
+                        </span>
+                      )}
+                      {preview && !cell && <span className="absolute inset-1 rounded-[4px] bg-primary/30" />}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        <div className="hidden">
           {board.map((row, r) =>
             row.map((cell, c) => {
               const key = `${r}-${c}`;
               const preview = previewCells.has(key);
-              const boxShade = (Math.floor(r / 3) + Math.floor(c / 3)) % 2 === 0;
               return (
-                <button
+                <span
                   key={key}
-                  type="button"
-                  onPointerEnter={() => setHover({ r, c })}
-                  onPointerDown={() => setHover({ r, c })}
-                  onClick={() => place(r, c)}
-                  className={cn(
-                    "relative aspect-square rounded-[7px] transition-all duration-150",
-                    boxShade ? "bg-board-cell" : "bg-board-cell/60",
-                    preview && "ring-2 ring-primary",
-                    (r === 2 || r === 5) && "mb-[3px]",
-                    (c === 2 || c === 5) && "mr-[3px]",
-                  )}
+                  className={cn(preview && "hidden")}
                 >
-                  {cell && (
-                    <span
-                      className={cn(
-                        "absolute inset-0 grid place-items-center rounded-[7px] text-[11px] shadow-inset-soft",
-                        critterClass[cell],
-                        clearing.includes(key) ? "animate-clear-cell" : "animate-pop-in",
-                      )}
-                    >
-                      {critterEmoji[cell]}
-                    </span>
-                  )}
-                  {preview && !cell && <span className="absolute inset-1 rounded-[5px] bg-primary/30" />}
-                </button>
+                  {cell}
+                </span>
               );
             }),
           )}
