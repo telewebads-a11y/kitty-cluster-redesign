@@ -1,4 +1,3 @@
-<<<<<<<PATCH
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
@@ -180,4 +179,3 @@ export function Countdown({ d, h, m, s }: { d: number; h: number; m: number; s: 
     </div>
   );
 }
-PATCH
