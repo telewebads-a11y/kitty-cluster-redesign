@@ -3,12 +3,12 @@ import { Home, Puzzle, Trophy, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const items = [
+const items: { to: string; label: string; Icon: typeof Home; primary?: boolean }[] = [
   { to: "/", label: "Home", Icon: Home },
   { to: "/play", label: "Play Now", Icon: Puzzle, primary: true },
   { to: "/tournament", label: "Tournament", Icon: Trophy },
   { to: "/profile", label: "Profile", Icon: User },
-] as const;
+];
 
 export function BottomNav() {
   return (
@@ -17,7 +17,7 @@ export function BottomNav() {
         {items.map(({ to, label, Icon, primary }) => (
           <li key={to} className="flex justify-center">
             <Link
-              to={to}
+              to={to as "/"}
               activeOptions={{ exact: to === "/" }}
               className="group flex flex-col items-center gap-1"
             >
