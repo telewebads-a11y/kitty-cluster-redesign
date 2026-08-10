@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Pencil, UserPlus, Users, Palette, Star } from "lucide-react";
+import { useRef, useState } from "react";
+import { Pencil, UserPlus, Users, Palette, Mail, LogOut, Trash2, ImagePlus } from "lucide-react";
 import { AppShell } from "@/components/kc/AppShell";
 import {
   ActionButton,
@@ -12,7 +12,10 @@ import {
   SectionTitle,
   StatTile,
 } from "@/components/kc/primitives";
-import { achievements, avatars, friends, player, plans, themes, trophies } from "@/data/mock";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { achievements, avatars, friends, player, themes, trophies } from "@/data/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/profile")({
@@ -32,19 +35,33 @@ export const Route = createFileRoute("/profile")({
 
 function ProfileScreen() {
   const [avatar, setAvatar] = useState(player.avatar);
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [name, setName] = useState(player.name);
+  const [nickname, setNickname] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+  const [email, setEmail] = useState(player.email);
 
   return (
     <AppShell>
       <Card className="grad-brand border-0 text-center text-primary-foreground">
-        <Avatar emoji={avatar} size={84} className="mx-auto bg-card/25" />
-        <h1 className="mt-2 font-display text-xl font-extrabold">{player.name}</h1>
-        <p className="text-xs font-bold opacity-90">{player.username}</p>
-        <p className="text-xs font-bold opacity-75">{player.email}</p>
+        {photo ? (
+          <img
+            src={photo}
+            alt="Your profile picture"
+            className="mx-auto size-[84px] rounded-2xl object-cover"
+          />
+        ) : (
+          <Avatar emoji={avatar} size={84} className="mx-auto bg-card/25" />
+        )}
+        <h1 className="mt-2 font-display text-xl font-extrabold">{name}</h1>
+        <p className="text-xs font-bold opacity-90">{nickname ? `“${nickname}”` : player.username}</p>
+        <p className="text-xs font-bold opacity-75">{signedIn ? email : "Not signed in"}</p>
         <div className="mx-auto mt-3 max-w-56">
           <ProgressBar value={(player.xp / player.xpMax) * 100} className="bg-card/25" />
           <p className="mt-1 text-[11px] font-bold opacity-90">Level {player.level} • {player.xp}/{player.xpMax} XP</p>
         </div>
-        <ActionButton className="mx-auto mt-3 w-auto" size="sm" variant="coin">
+        <ActionButton className="mx-auto mt-3 w-auto" size="sm" variant="coin" onClick={() => setEditOpen(true)}>
           <span className="inline-flex items-center gap-1.5">
             <Pencil size={13} /> Edit Profile
           </span>
