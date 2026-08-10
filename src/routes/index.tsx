@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Bell, Settings, Flame, Trophy, Gift, Star, Users, Plus, Play, Heart, MessageCircle, Share2 } from "lucide-react";
+import { Bell, Flame, Trophy, Users, Plus, Play, Heart, MessageCircle, Share2 } from "lucide-react";
 import { AppShell } from "@/components/kc/AppShell";
 import { Logo, Wordmark } from "@/components/kc/Logo";
 import { Splash } from "@/components/kc/Splash";
@@ -60,9 +60,6 @@ function HomeScreen() {
             <Link to="/notifications" className="press relative grid size-9 place-items-center rounded-xl bg-secondary">
               <Bell size={17} />
               <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-live" />
-            </Link>
-            <Link to="/settings" className="press grid size-9 place-items-center rounded-xl bg-secondary">
-              <Settings size={17} />
             </Link>
           </div>
         </header>
@@ -269,21 +266,6 @@ function HomeScreen() {
         <Card className="border-dashed bg-muted/40 text-center">
           <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground">Advertisement</p>
           <p className="mt-1 text-xs font-bold text-muted-foreground">Banner ad space — 320 × 50</p>
-        </Card>
-
-        <Card className="grad-premium border-0 text-primary-foreground">
-          <div className="flex items-center gap-2">
-            <Star size={18} />
-            <p className="font-display text-lg font-extrabold">GO PREMIUM</p>
-          </div>
-          <p className="mt-1 text-xs font-bold opacity-90">
-            No ads • Exclusive themes & avatars • Bonus coins • Premium tournaments
-          </p>
-          <Link to="/profile" className="mt-3 block">
-            <ActionButton size="lg" variant="coin">
-              View Plans
-            </ActionButton>
-          </Link>
         </Card>
 
         <Card>
