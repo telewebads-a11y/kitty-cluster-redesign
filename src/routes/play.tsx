@@ -38,7 +38,7 @@ const critterEmoji = Object.fromEntries(CRITTERS.map((c) => [c.id, c.emoji]));
 
 function PlayScreen() {
   const [board, setBoard] = useState<Cell[][]>(emptyBoard);
-  const [pieces, setPieces] = useState<(Piece | null)[]>(() => [newPiece(), newPiece(), newPiece()]);
+  const [pieces, setPieces] = useState<(Piece | null)[]>([null, null, null]);
   const [selected, setSelected] = useState(0);
   const [hover, setHover] = useState<{ r: number; c: number } | null>(null);
   const [score, setScore] = useState(0);
@@ -53,6 +53,10 @@ function PlayScreen() {
   const [victory, setVictory] = useState(false);
 
   const activePiece = pieces[selected] ?? pieces.find((p) => p) ?? null;
+
+  useEffect(() => {
+    setPieces([newPiece(), newPiece(), newPiece()]);
+  }, []);
 
   const float = useCallback((text: string) => {
     const id = Date.now() + Math.random();
