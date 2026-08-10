@@ -41,6 +41,7 @@ function ProfileScreen() {
   const [editOpen, setEditOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const [email, setEmail] = useState(player.email);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <AppShell>
