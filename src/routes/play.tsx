@@ -134,7 +134,7 @@ function PlayScreen() {
   }, [hover, activePiece, board]);
 
   return (
-    <AppShell>
+    <AppShell nav={false}>
       <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
         <Link to="/" className="press grid size-9 place-items-center rounded-xl bg-secondary">
           <ArrowLeft size={17} />
