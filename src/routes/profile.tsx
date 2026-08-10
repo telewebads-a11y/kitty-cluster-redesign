@@ -142,9 +142,21 @@ function ProfileScreen() {
             </button>
           ))}
         </div>
-        <ActionButton className="mt-3" size="lg" variant="ghost">
-          Upload Profile Picture
+        <ActionButton className="mt-3" size="lg" variant="ghost" onClick={() => fileRef.current?.click()}>
+          <span className="inline-flex items-center justify-center gap-1.5">
+            <ImagePlus size={15} /> Choose From Gallery
+          </span>
         </ActionButton>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) setPhoto(URL.createObjectURL(file));
+          }}
+        />
       </Card>
 
       <SectionTitle title="🏆 Trophy Room" />
@@ -214,38 +226,48 @@ function ProfileScreen() {
         ))}
       </div>
 
-      <SectionTitle title="Premium" />
-      <Card className="grad-premium border-0 text-primary-foreground">
-        <p className="flex items-center gap-1.5 font-display text-lg font-extrabold">
-          <Star size={17} /> KITTY CLUSTER PREMIUM
-        </p>
-        <ul className="mt-2 grid grid-cols-2 gap-1 text-[11px] font-bold opacity-90">
-          {["No ads", "Exclusive themes", "Exclusive avatars", "Bonus coins", "Premium tournaments", "Exclusive rewards"].map(
-            (f) => (
-              <li key={f}>• {f}</li>
-            ),
-          )}
-        </ul>
-        <div className="mt-3 flex flex-col gap-2">
-          {plans.map((p) => (
-            <div
-              key={p.id}
-              className={cn(
-                "flex items-center gap-3 rounded-2xl bg-card/20 px-3 py-2.5",
-                p.best && "ring-2 ring-primary-foreground/70",
-              )}
-            >
+      <SectionTitle title="Account" />
+      <Card>
+        {signedIn ? (
+          <>
+            <div className="flex items-center gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-secondary">
+                <Mail size={17} />
+              </span>
               <div className="min-w-0 flex-1">
-                <p className="font-display text-sm font-extrabold">{p.label}</p>
-                <p className="text-[11px] font-bold opacity-85">{p.note}</p>
+                <p className="truncate text-sm font-extrabold">{email}</p>
+                <p className="text-[11px] font-bold text-muted-foreground">Signed in with Google</p>
               </div>
-              <span className="font-display text-base font-extrabold">{p.price}</span>
-              <ActionButton size="sm" variant="coin">
-                Get
-              </ActionButton>
             </div>
-          ))}
-        </div>
+            <ActionButton className="mt-3" size="lg" variant="ghost" onClick={() => setSignedIn(false)}>
+              <span className="inline-flex items-center justify-center gap-1.5">
+                <LogOut size={15} /> Sign Out
+              </span>
+            </ActionButton>
+          </>
+        ) : (
+          <>
+            <p className="text-sm font-bold text-muted-foreground">
+              Sign in with your Gmail account to sync progress, coins and trophies.
+            </p>
+            <ActionButton className="mt-3" size="lg" onClick={() => setSignedIn(true)}>
+              <span className="inline-flex items-center justify-center gap-1.5">
+                <Mail size={15} /> Continue With Gmail
+              </span>
+            </ActionButton>
+          </>
+        )}
+        <button
+          type="button"
+          className="press mt-3 inline-flex w-full items-center justify-center gap-1.5 py-2 text-sm font-extrabold text-destructive"
+        >
+          <Trash2 size={15} /> Delete Account
+        </button>
+      </Card>
+
+      <Card className="border-dashed bg-muted/40 text-center">
+        <p className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground">Advertisement</p>
+        <p className="mt-1 text-xs font-bold text-muted-foreground">Banner ad space — 320 × 50</p>
       </Card>
 
       <Link to="/settings">
@@ -253,6 +275,77 @@ function ProfileScreen() {
           Settings
         </ActionButton>
       </Link>
+
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-sm rounded-3xl">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl font-extrabold">Edit Profile</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              {photo ? (
+                <img src={photo} alt="Your profile picture" className="size-16 rounded-2xl object-cover" />
+              ) : (
+                <Avatar emoji={avatar} size={64} />
+              )}
+              <div className="flex flex-col gap-1.5">
+                <ActionButton size="sm" variant="ghost" onClick={() => fileRef.current?.click()}>
+                  <span className="inline-flex items-center gap-1.5">
+                    <ImagePlus size={13} /> Change Picture
+                  </span>
+                </ActionButton>
+                {photo && (
+                  <button
+                    type="button"
+                    onClick={() => setPhoto(null)}
+                    className="text-[11px] font-bold text-muted-foreground underline"
+                  >
+                    Remove photo
+                  </button>
+                )}
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs font-bold">Name</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 rounded-2xl" />
+            </div>
+            <div>
+              <Label className="text-xs font-bold">Nickname (optional)</Label>
+              <Input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="Kitty Master"
+                className="mt-1 rounded-2xl"
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-bold">Email</Label>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 rounded-2xl" />
+            </div>
+            <div>
+              <Label className="text-xs font-bold">Favourite avatar</Label>
+              <div className="mt-1 grid grid-cols-4 gap-2">
+                {avatars.map((a) => (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => setAvatar(a.emoji)}
+                    className={cn(
+                      "press grid place-items-center rounded-2xl bg-secondary py-2 text-2xl",
+                      avatar === a.emoji && "ring-2 ring-primary",
+                    )}
+                  >
+                    {a.emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <ActionButton size="lg" onClick={() => setEditOpen(false)}>
+              Save Changes
+            </ActionButton>
+          </div>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }
